@@ -6,18 +6,19 @@ set node=client@192.168.0.199
 goto wait_input
 
 :wait_input
-    chcp 936
-    echo =================
-    echo 编译文件   make
-    echo 启动服务   start
-    echo 停止服务   stop
-    echo 退出脚本   quit
-    echo =================
-    set /p var=请输入指令:
-    if "%var%" == "make" goto make
-    if "%var%" == "start" goto start
-    if "%var%" == "stop" goto stop
-    if "%var%" == "quit" goto quit
+    echo ===================
+    echo make file:    make
+    echo start app:    start
+    echo stop app:     stop
+    echo quit escript: quit
+    echo gen proto:    proto
+    echo ===================
+    set /p var=input:
+    if %var% == make goto make
+    if %var% == start goto start
+    if %var% == stop goto stop
+    if %var% == quit goto quit
+    if %var% == proto goto proto
     goto wait_input
 
 :make
@@ -35,6 +36,11 @@ goto wait_input
 :stop
     set var=
     start werl -setcookie %cookie% -name stop_%node% -pa ./ebin/ -eval "rpc:call('%node%', main, stop, []), init:stop()"
+    goto wait_input
+
+:proto
+    set var=
+    escript ./src/proto/gpb_compile.erl
     goto wait_input
 
 :quit

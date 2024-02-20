@@ -54,9 +54,11 @@ term_to_beam(ModName, TermList) ->
         maps:get(Key, All, Def).",
     NewModName = ModName ++ ".erl",
     file:write_file(NewModName, unicode:characters_to_binary(Str)),
-    {ok, Mod} = compile:file(NewModName),
+    file:set_cwd("./ebin"),
+    {ok, Mod} = compile:file("../" ++ NewModName),
     code:purge(Mod),
     code:load_file(Mod),
+    file:set_cwd("../"),
     file:delete(NewModName),
     {ok, Mod}.
 
