@@ -2,8 +2,8 @@
 %% 自动生成, 请勿编辑
 -module('OuterMessage').
 
--include("OuterMessage.hrl").
--include("protobuffer.hrl").
+-include("../../include/OuterMessage.hrl").
+-include("../../include/protobuffer.hrl").
 
 -export([encode_msg/1, decode_msg/2]).
 

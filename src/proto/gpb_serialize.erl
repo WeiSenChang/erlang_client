@@ -2,7 +2,7 @@
 
 -module(gpb_serialize).
 
--include("protobuffer.hrl").
+-include("../../include/protobuffer.hrl").
 
 %% API
 -export([

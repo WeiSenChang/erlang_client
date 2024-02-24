@@ -18,19 +18,17 @@ start() ->
 %% Init is called in the new process.
 init([]) ->
     wx:new(),
-    Frame = wxFrame:new(wx:null(), 
-			-1, % window id
-			"Hello World", % window title
+    Frame = wxFrame:new(wx:null(),
+			?wxID_ANY,
+			"Game Client",
 			[{size, {600,400}}]),
     
     wxFrame:createStatusBar(Frame,[]),
 
-    %% if we don't handle this ourselves, wxwidgets will close the window
-    %% when the user clicks the frame's close button, but the event loop still runs
     wxFrame:connect(Frame, close_window),
 
-    ok = wxFrame:setStatusText(Frame, "Hello World!",[]),
-    wxWindow:show(Frame),
+    ok = wxFrame:setStatusText(Frame, "Welcome!",[]),
+    wxFrame:show(Frame),
 
     MenuBar = wxMenuBar:new(),
     wxFrame:setMenuBar (Frame, MenuBar),
@@ -38,6 +36,11 @@ init([]) ->
     wxMenuBar:append (MenuBar, FileMn, "&File"),
     Quit = wxMenuItem:new ([{id,400},{text, "&Quit"}]),
     wxMenu:append (FileMn, Quit),
+
+    HelpMn = wxMenu:new(),
+    wxMenuBar:append (MenuBar, HelpMn, "&Help"),
+    About = wxMenuItem:new ([{id,500},{text, "&About"}]),
+    wxMenu:append (HelpMn, About),
 
     wxFrame:connect (Frame, command_menu_selected),
     {Frame, #state{win=Frame}}.
@@ -56,6 +59,12 @@ handle_call(Msg, _From, State) ->
 handle_event(#wx{id = 400, event=#wxCommand{type = command_menu_selected}}, State = #state{win=Frame}) ->
     close(Frame),
     {stop, normal, State};
+handle_event(#wx{id = 500, event=#wxCommand{type = command_menu_selected}}, State = #state{win=Frame}) ->
+    D = wxMessageDialog:new (Frame, "Let's talk."),
+    wxMessageDialog:showModal(D),
+    {noreply, State};
+handle_event(#wx{id = 401, event=#wxCommand{type = command_menu_selected}}, State = #state{win=_Frame}) ->
+    {noreply, State};
 handle_event(#wx{event=#wxClose{}}, State = #state{win=Frame}) ->
     close(Frame),
     {stop, normal, State}.

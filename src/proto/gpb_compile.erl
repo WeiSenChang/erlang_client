@@ -128,8 +128,8 @@ write_erl_file(O, ModName, FileMsgMap) ->
 	io:format(FileHandle, "%% -*- coding: utf-8 -*-
 %% 自动生成, 请勿编辑
 -module('~ts').~n
--include(\"~ts.hrl\").
--include(\"protobuffer.hrl\").~n
+-include(\"../../include/~ts.hrl\").
+-include(\"../../include/protobuffer.hrl\").~n
 -export([encode_msg/1, decode_msg/2]).~n
 encode_msg(Msg)->
 	SerialFieldList = convert_field_list(Msg),
